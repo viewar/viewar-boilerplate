@@ -1,13 +1,16 @@
+const fs = require('fs')
 const webpack = require('webpack')
 const mergeConfig = require('webpack-merge')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const path = require('path')
-const { srcPath, buildPath } = require('./paths')
+const { srcPath, buildPath, modulePath } = require('./paths')
 
 const prodConfig = require('./webpack.config.prod')
 const devConfig = require('./webpack.config.dev')
 const devCoreConfig = require('./webpack.config.core')
 const devMockConfig = require('./webpack.config.mock')
+
+const {appId, appVersion} = JSON.parse(fs.readFileSync(`${__dirname}/../.viewar-config`, 'utf8'))
 
 const baseConfig = {
   output: {
@@ -15,7 +18,7 @@ const baseConfig = {
     filename: '[name].js',
   },
   entry: {
-    polyfills: ['babel-polyfill'],
+    polyfills: ['babel-polyfill', path.join(srcPath, 'polyfills.js')],
     index: [path.join(srcPath, 'index.js')],
   },
   plugins: [
@@ -23,16 +26,34 @@ const baseConfig = {
       title: 'ViewAR SDK App',
       template: path.join(srcPath, 'index.html'),
       inject: true,
+      bundleIdentifier: appId,
+      bundleVersion: appVersion,
     }),
     new webpack.optimize.ModuleConcatenationPlugin(),
   ],
   resolve: {
     modules: [
-      'node_modules',
+      modulePath,
     ],
   },
   module: {
     rules: [
+      {
+        test: /\.jsx?$/,
+        include: srcPath,
+        exclude: modulePath,
+
+        use: {
+          loader: 'babel-loader',
+          options: {
+            babelrc: false,
+            presets: [
+              'react',
+            ],
+            cacheDirectory: true,
+          },
+        },
+      },
       {
         test: /\.(eot|ttf|otf|woff2?)(\?v=\d+\.\d+\.\d+)?|png|jpe?g|svg|gif|ico$/,
         use: {
@@ -64,6 +85,6 @@ module.exports = (env) => {
     case 'dev-mock':
       return mergeConfig(baseConfig, devConfig, devMockConfig)
     default:
-      throw new Error(`ViewAR boilerplate: Error! Unrecognized mode "${env}"!`)
+      throw new Error(`ViewAR boilerplate: Error! Unrecognized mode ${JSON.stringify(env)}!`)
   }
 }

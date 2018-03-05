@@ -1,6 +1,5 @@
 const webpack = require('webpack')
 const ip = require('ip').address()
-const { srcPath, modulePath } = require('./paths')
 
 module.exports = {
   devtool: 'source-map',
@@ -14,26 +13,6 @@ module.exports = {
       errors: true,
       warnings: true,
     },
-  },
-  module: {
-    rules: [
-      {
-        test: /\.js$/,
-        include: srcPath,
-        exclude: modulePath,
-
-        use: {
-          loader: 'babel-loader',
-          options: {
-            babelrc: false,
-            presets: [
-              'react',
-            ],
-            cacheDirectory: true,
-          },
-        },
-      },
-    ]
   },
   output: {
     devtoolModuleFilenameTemplate: 'source:///[absolute-resource-path]',

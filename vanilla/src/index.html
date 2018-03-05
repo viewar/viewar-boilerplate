@@ -8,5 +8,9 @@
 <body>
 <h1>ViewAR SDK App</h1>
 <link rel="stylesheet" type="text/css" href="//CustomUI/index.css">
+<script type="text/javascript">
+  window.bundleIdentifier = window.bundleIdentifier || <%= JSON.stringify(htmlWebpackPlugin.options.bundleIdentifier) %>
+  window.bundleVersion = window.bundleVersion || <%= JSON.stringify(htmlWebpackPlugin.options.bundleVersion) %>
+</script>
 </body>
 </html>

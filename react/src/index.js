@@ -10,7 +10,7 @@ import App from './app'
 
 ;(async function () {
 
-  window.api = await viewarApi.init({appId: 'com.viewar.sdk'})
+  window.api = await viewarApi.init()
 
   const appRoot = document.getElementById('app')
 

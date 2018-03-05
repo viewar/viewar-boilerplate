@@ -2,8 +2,8 @@ import viewarApi from 'viewar-api'
 
 import './index.css'
 
-(async function main () {
-  window.api = await viewarApi.init({appId: 'com.viewar.sdk'})
+;(async function main () {
+  window.api = await viewarApi.init()
 
   const sheepModel = await viewarApi.modelManager.fetchModelFromRepository('20')
 
