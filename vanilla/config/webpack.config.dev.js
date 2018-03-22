@@ -1,4 +1,3 @@
-const webpack = require('webpack')
 const ip = require('ip').address()
 
 module.exports = {
@@ -17,9 +16,4 @@ module.exports = {
   output: {
     devtoolModuleFilenameTemplate: 'source:///[absolute-resource-path]',
   },
-  plugins: [
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify('development'),
-    }),
-  ],
 }
