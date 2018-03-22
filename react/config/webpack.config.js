@@ -1,14 +1,11 @@
 const fs = require('fs')
-const webpack = require('webpack')
 const mergeConfig = require('webpack-merge')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const path = require('path')
-const { srcPath, buildPath, modulePath } = require('./paths')
+const {srcPath, buildPath, modulePath} = require('./paths')
 
-const prodConfig = require('./webpack.config.prod')
 const devConfig = require('./webpack.config.dev')
 const devCoreConfig = require('./webpack.config.core')
-const devMockConfig = require('./webpack.config.mock')
 
 const {appId, appVersion} = JSON.parse(fs.readFileSync(`${__dirname}/../.viewar-config`, 'utf8'))
 
@@ -23,13 +20,11 @@ const baseConfig = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      title: 'ViewAR SDK App',
       template: path.join(srcPath, 'index.html'),
       inject: true,
       bundleIdentifier: appId,
       bundleVersion: appVersion,
     }),
-    new webpack.optimize.ModuleConcatenationPlugin(),
   ],
   resolve: {
     modules: [
@@ -41,8 +36,6 @@ const baseConfig = {
       {
         test: /\.jsx?$/,
         include: srcPath,
-        exclude: modulePath,
-
         use: {
           loader: 'babel-loader',
           options: {
@@ -50,9 +43,21 @@ const baseConfig = {
             presets: [
               'react',
             ],
-            cacheDirectory: true,
+            plugins: [
+              ['transform-object-rest-spread', {'useBuiltIns': true}],
+            ],
           },
         },
+      },
+      {
+        test: /\.css$/,
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {importLoaders: 1, modules: true, localIdentName: '[file]--[local]'},
+          },
+        ],
       },
       {
         test: /\.(eot|ttf|otf|woff2?)(\?v=\d+\.\d+\.\d+)?|png|jpe?g|svg|gif|ico$/,
@@ -63,27 +68,18 @@ const baseConfig = {
           },
         },
       },
-      {
-        test: /\.css$/,
-        use: [
-          'style-loader',
-          {loader: 'css-loader', options: {importLoaders: 1, modules: true, localIdentName: '[name]-[local]'}},
-        ],
-      },
     ],
   },
 }
 
-module.exports = (env) => {
-  process.env.BABEL_ENV = env
-
+module.exports = (env, args) => {
   switch (env) {
     case 'prod':
-      return mergeConfig(baseConfig, prodConfig)
+      return mergeConfig(baseConfig)
     case 'dev-core':
       return mergeConfig(baseConfig, devConfig, devCoreConfig)
     case 'dev-mock':
-      return mergeConfig(baseConfig, devConfig, devMockConfig)
+      return mergeConfig(baseConfig, devConfig)
     default:
       throw new Error(`ViewAR boilerplate: Error! Unrecognized mode ${JSON.stringify(env)}!`)
   }
