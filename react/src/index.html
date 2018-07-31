@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>ViewAR SDK App</title>
-  <link rel="stylesheet" type="text/css" href="//CustomUI/index.css">
 </head>
 <body>
 <div id="app"></div>
@@ -12,5 +11,9 @@
   window.bundleIdentifier = window.bundleIdentifier || <%= JSON.stringify(htmlWebpackPlugin.options.bundleIdentifier) %>
   window.bundleVersion = window.bundleVersion || <%= JSON.stringify(htmlWebpackPlugin.options.bundleVersion) %>
 </script>
+<script src="./viewar-core.js"></script>
 </body>
+
+<link rel="stylesheet" type="text/css" href="//CustomUI/index.css">
+<link rel="stylesheet" type="text/css" href="/CustomUI/index.css">
 </html>
