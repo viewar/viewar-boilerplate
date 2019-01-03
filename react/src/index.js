@@ -1,37 +1,44 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
-import { AppContainer } from 'react-hot-loader'
+import React from 'react';
+import ReactDOM from 'react-dom';
 
-import viewarApi from 'viewar-api'
+import viewarApi from 'viewar-api';
 
-import './index.css'
+import './index.scss';
 
-import App from './app'
+import App from './app';
+(async function() {
+  window.api = await viewarApi.init();
 
-;(async function () {
-
-  window.api = await viewarApi.init()
-
-  const appRoot = document.getElementById('app')
+  const rootElement = document.getElementById('app');
 
   const render = Component => {
     ReactDOM.render(
-    <AppContainer>
-      <Component/>
-    </AppContainer>, appRoot)
-  }
+      <Component />,
+      rootElement
+    );
+  };
 
-  render(App)
+  render(App);
 
   if (module.hot) {
-    module.hot.accept('./app', () => render(App))
+    module.hot.accept(App, () => {
+      render(App);
+    });
   }
 
-  const sheepModel = await viewarApi.modelManager.fetchModelFromRepository('20')
+  const sheepModel = await viewarApi.modelManager.fetchModelFromRepository(
+    '20'
+  );
 
   for (let x = 0; x < 20; ++x) {
     await viewarApi.sceneManager.insertModel(sheepModel, {
-      pose: {position: {x: (Math.random() * 4000 - 2000), y: 0, z: (Math.random() * 4000 - 2000)}}
-    })
+      pose: {
+        position: {
+          x: Math.random() * 4000 - 2000,
+          y: 0,
+          z: Math.random() * 4000 - 2000,
+        },
+      },
+    });
   }
-}())
+})();

@@ -1,3 +1,4 @@
-import FastClick from 'fastclick'
+import 'babel-polyfill';
+import FastClick from 'fastclick';
 
-FastClick.attach(window.document.body)
+FastClick.attach(window.document.body);
