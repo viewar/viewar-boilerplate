@@ -46,11 +46,10 @@
     "webpack-merge": "^4.1.5"
   },
   "dependencies": {
-    "fastclick": "^1.0.6",
     "normalize.css": "^8.0.1",
     "react": "^16.7.0",
     "react-dom": "^16.7.0",
-    "viewar-api": "^0.30.2",
+    "viewar-api": "^0.35.0",
     "viewar-core": "^11.18.1"
   }
 }
